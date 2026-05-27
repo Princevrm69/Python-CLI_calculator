@@ -13,7 +13,7 @@ def mul(a, b):
 def div(a, b):
     if b == 0:
         return "Error: Cannot divide by zero"
-    
+
     return a / b
 
 
@@ -22,14 +22,7 @@ def mod(a, b):
 
 
 def exp(a, b):
-    return a ** b
+    return a**b
 
-operations = {
-    "+": add,
-    "-": sub,
-    "*": mul,
-    "/": div,
-    "%": mod,
-    "**": exp
 
-}
+operations = {"+": add, "-": sub, "*": mul, "/": div, "%": mod, "**": exp}
