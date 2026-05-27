@@ -1,10 +1,14 @@
 def flush_number(tokens, current_number):
 
     if current_number != "":
-        tokens.append(float(current_number))
+
+        try:
+            tokens.append(float(current_number))
+
+        except ValueError:
+            return None
 
     return ""
-
 
 
 def replace_section(tokens, start, end, value):
@@ -29,7 +33,6 @@ def parse_expression(expression):
     while i < len(expression):
 
         ch = expression[i]
-
 
         # Ignore spaces
         if ch == " ":
@@ -58,7 +61,8 @@ def parse_expression(expression):
                 tokens,
                 current_number
             )
-
+            if current_number is None:
+                return None
 
             # Lookahead for **
             if (
@@ -86,21 +90,21 @@ def parse_expression(expression):
                     tokens,
                     current_number
                 )
-
+            if current_number is None:
+                return None
 
             # Validation for opening parenthesis
             if ch == "(":
 
-                # Reject implicit multiplication
-                if (
-                    len(tokens) > 0
-                    and (
-                        isinstance(tokens[-1], float)
-                        or tokens[-1] == ")"
+    # Reject implicit multiplication
+               if (
+                   len(tokens) > 0
+                   and (
+                       isinstance(tokens[-1], (int, float))
+                       or tokens[-1] == ")"
                     )
                 ):
                     return None
-
 
             # Validation for closing parenthesis
             if ch == ")":
@@ -142,9 +146,6 @@ def parse_expression(expression):
                     i += 1
                     continue
 
-
-            # Invalid operator placement
-            if current_number == "":
                 return None
 
 
@@ -152,6 +153,8 @@ def parse_expression(expression):
                 tokens,
                 current_number
             )
+            if current_number is None:
+                return None
 
             tokens.append(ch)
 
@@ -162,25 +165,27 @@ def parse_expression(expression):
             return None
 
 
+# Invalid trailing operator
     # Invalid trailing operator
-    if current_number == "":
-
-        if (
+    if (
+        current_number == ""
+        and (
             len(tokens) == 0
             or tokens[-1] in [
                 "+", "-", "*",
                 "/", "%", "**", "("
-            ]
-        ):
-            return None
-
-
+        ]
+    )
+):
+        return None
+    
     current_number = flush_number(
         tokens,
         current_number
     )
 
-
+    if current_number is None:
+        return None
     return tokens
 
 
@@ -191,50 +196,56 @@ def evaluate_tokens(tokens, operations):
     # Recursive parentheses evaluation
     while "(" in tokens:
 
-        start = None
+         start = None
+         found_closing = False
 
 
-        for i in range(len(tokens)):
+         for i in range(len(tokens)):
 
-            if tokens[i] == "(":
+           if tokens[i] == "(":
 
-                start = i
-
-
-            elif tokens[i] == ")":
+            start = i
 
 
-                if start is None:
-                    return "Invalid expression"
+           elif tokens[i] == ")":
+
+            found_closing = True
 
 
-                inner_tokens = tokens[start + 1:i]
+            if start is None:
+                return "Invalid expression"
 
 
-                # Empty parentheses
-                if len(inner_tokens) == 0:
-                    return "Invalid expression"
+            inner_tokens = tokens[start + 1:i]
 
 
-                inner_result = evaluate_tokens(
-                    inner_tokens,
-                    operations
-                )
+            # Empty parentheses
+            if len(inner_tokens) == 0:
+                return "Invalid expression"
 
 
-                if inner_result == "Invalid expression":
-                    return "Invalid expression"
+            inner_result = evaluate_tokens(
+                inner_tokens,
+                operations
+            )
 
 
-                tokens = replace_section(
-                    tokens,
-                    start,
-                    i + 1,
-                    inner_result
-                )
+            if inner_result == "Invalid expression":
+                return "Invalid expression"
 
-                break
 
+            tokens = replace_section(
+                tokens,
+                start,
+                i + 1,
+                inner_result
+            )
+
+            break
+
+
+         if not found_closing:
+           return "Invalid expression"
 
     # Unmatched parentheses
     if "(" in tokens or ")" in tokens:
