@@ -48,22 +48,16 @@ def parse_expression(expression):
         # Handle * and **
         elif ch == "*":
 
-            # Invalid ***
+          # Invalid ***
             if (
-               i + 1 < len(expression)
-               and expression[i + 1] == "*"
-            ):
-
-               if (
-                   i + 2 < len(expression)
-                   and expression[i + 2] == "*"
-                ):
-                   raise ValueError(
-                        "Invalid consecutive exponent operators"
+             i + 2 < len(expression)
+             and expression[i] == "*"
+             and expression[i + 1] == "*"
+             and expression[i + 2] == "*"
+        ):
+             raise ValueError(
+                "Invalid exponent syntax"
           )
-               raise ValueError(
-                    "Invalid exponent syntax"
-                )
 
             if current_number == "" and (
                 len(tokens) == 0

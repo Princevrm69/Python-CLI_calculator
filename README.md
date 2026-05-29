@@ -133,3 +133,7 @@ Enter expression: 2(3+4)
 
 Result: 14.0
 ```
+
+## Automated Testing 
+ 
+This project uses GitHub Actions to automatically run tests on every push and pull request.

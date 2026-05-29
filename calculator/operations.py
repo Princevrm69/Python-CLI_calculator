@@ -11,11 +11,11 @@ def mul(a, b):
 
 
 def div(a, b):
+
     if b == 0:
-        return "Error: Cannot divide by zero"
+        raise ValueError("Division by zero")
 
     return a / b
-
 
 def mod(a, b):
 
