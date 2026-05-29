@@ -6,7 +6,7 @@ def flush_number(tokens, current_number):
             tokens.append(float(current_number))
 
         except ValueError:
-            return None
+            raise ValueError("Invalid number format")
 
     return ""
 

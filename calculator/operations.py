@@ -18,6 +18,10 @@ def div(a, b):
 
 
 def mod(a, b):
+
+    if b == 0:
+        raise ValueError("Modulo by zero")
+
     return a % b
 
 
