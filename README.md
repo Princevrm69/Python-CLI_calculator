@@ -137,3 +137,12 @@ Result: 14.0
 ## Automated Testing 
  
 This project uses GitHub Actions to automatically run tests on every push and pull request.
+
+
+## Future improvement
+
+- Abstract Syntax Tree (AST) parser
+- Variables and assignments
+- Built-in mathematical functions
+- Memory registers
+- Expression tree visualization
