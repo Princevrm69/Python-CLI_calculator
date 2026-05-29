@@ -49,6 +49,8 @@ def parse_expression(expression):
         elif ch == "*":
 
           # Invalid ***
+            
+            
             if (
              i + 2 < len(expression)
              and expression[i] == "*"
